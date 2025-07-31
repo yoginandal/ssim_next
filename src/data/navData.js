@@ -140,4 +140,4 @@ export const navlinks = [
     ],
   },
   { name: "Contact Us", path: "/contact-us" }, // Added Contact Us link
-];
+]; 

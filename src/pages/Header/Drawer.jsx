@@ -17,7 +17,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Menu, ChevronDown, ChevronRight } from "lucide-react";
-import { navlinks } from "@/pages/Header/navData";
+import { navlinks } from "@/data/navData";
 
 const Drawer = () => {
   const CollapsibleNavItem = ({ item }) => {
