@@ -16,7 +16,7 @@ export default function BannerNav() {
           </Link>
         </div>
         <div className="flex items-center gap-10">
-          <div className="hidden md:flex justify-end sm:items-center space-x-4">
+          <div className="hidden md:flex text-black justify-end sm:items-center space-x-4">
             <Link href="/iqac">IQAC</Link>
             <a
               href="https://maps.app.goo.gl/HhbEn3qSWAFCeuKR7"
