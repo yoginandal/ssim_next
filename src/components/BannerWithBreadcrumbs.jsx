@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+"use client";
 import { useState, useRef, useEffect } from "react";
 import {
   Breadcrumb,
@@ -114,13 +115,17 @@ const BannerWithBreadcrumbs = ({
                     <BreadcrumbPage className="font-bold text-white whitespace-nowrap">
                       {crumb.label}
                     </BreadcrumbPage>
-                  ) : (
+                  ) : crumb.href ? (
                     <BreadcrumbLink
                       href={crumb.href}
                       className="hover:text-gray-300 transition-colors whitespace-nowrap"
                     >
                       {crumb.label}
                     </BreadcrumbLink>
+                  ) : (
+                    <span className="text-white whitespace-nowrap">
+                      {crumb.label}
+                    </span>
                   )}
                 </BreadcrumbItem>
                 {index < breadcrumbs.length - 1 && (
