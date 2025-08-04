@@ -1,5 +1,4 @@
-export async function generateMetadata({ params }) {
-  return {
+export const metadata = {
     title: "Internships - SSIM",
     description: "Explore internship opportunities and programs at Siva Sivani Institute of Management (SSIM).",
     keywords: "SSIM internships, internship opportunities, summer internships, corporate internships",
@@ -30,10 +29,9 @@ export async function generateMetadata({ params }) {
       follow: true,
     },
     alternates: {
-      canonical: "https://www.ssim.ac.in/placement/internships",
-    },
-  };
-}
+    canonical: "https://www.ssim.ac.in/placement/internships",
+  },
+};
 
 export default function InternshipsLayout({ children }) {
   return children;

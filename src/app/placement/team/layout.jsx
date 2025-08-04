@@ -1,5 +1,4 @@
-export async function generateMetadata({ params }) {
-  return {
+export const metadata = {
     title: "Placement Team - SSIM",
     description: "Meet the placement team at Siva Sivani Institute of Management (SSIM).",
     keywords: "SSIM placement team, career services, placement officers",
@@ -30,10 +29,9 @@ export async function generateMetadata({ params }) {
       follow: true,
     },
     alternates: {
-      canonical: "https://www.ssim.ac.in/placement/team",
-    },
-  };
-}
+    canonical: "https://www.ssim.ac.in/placement/team",
+  },
+};
 
 export default function TeamLayout({ children }) {
   return children;

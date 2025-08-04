@@ -1,5 +1,4 @@
-export async function generateMetadata({ params }) {
-  return {
+export const metadata = {
     title: "Placement Records - SSIM",
     description: "View placement records and statistics at Siva Sivani Institute of Management (SSIM).",
     keywords: "SSIM placement records, placement statistics, career outcomes, employment data",
@@ -30,10 +29,9 @@ export async function generateMetadata({ params }) {
       follow: true,
     },
     alternates: {
-      canonical: "https://www.ssim.ac.in/placement/records",
-    },
-  };
-}
+    canonical: "https://www.ssim.ac.in/placement/records",
+  },
+};
 
 export default function RecordsLayout({ children }) {
   return children;

@@ -131,7 +131,7 @@ export const navlinks = [
           { name: "News & Announcements", path: "/students-life/news-announcements" },
           {
             name: "Student's Achievements",
-            path: "/students-life/achievements",
+            path: "/students-life/students-achievements",
           },
         ],
       },
