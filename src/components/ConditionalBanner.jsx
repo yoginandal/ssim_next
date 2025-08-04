@@ -4,13 +4,13 @@ import BannerWithBreadcrumbs from "./BannerWithBreadcrumbs";
 
 // Route configuration for breadcrumbs
 const routeConfig = {
-  "/about": {
-    title: "About SSIM",
-    breadcrumbs: [
-      { label: "Home", href: "/" },
-      { label: "About", href: "/about", isActive: true }
-    ]
-  },
+//   "/about": {
+//     title: "About SSIM",
+//     breadcrumbs: [
+//       { label: "Home", href: "/" },
+//       { label: "About", href: "/about", isActive: true }
+//     ]
+//   },
   "/about/vision-mission": {
     title: "Vision & Mission",
     breadcrumbs: [
@@ -59,13 +59,13 @@ const routeConfig = {
       { label: "Accreditations & Rankings", href: "/about/accreditations-rankings", isActive: true }
     ]
   },
-  "/programs": {
-    title: "Programs",
-    breadcrumbs: [
-      { label: "Home", href: "/" },
-      { label: "Programs", href: "/programs", isActive: true }
-    ]
-  },
+//   "/programs": {
+//     title: "Programs",
+//     breadcrumbs: [
+//       { label: "Home", href: "/" },
+//       { label: "Programs", href: "/programs", isActive: true }
+//     ]
+//   },
   "/programs/fpm-efpm": {
     title: "FPM/EFPM",
     breadcrumbs: [
@@ -98,20 +98,20 @@ const routeConfig = {
       { label: "PGDM Triple Specialisation", href: "/programs/pgdm-triple-specialisation", isActive: true }
     ]
   },
-  "/admissions": {
-    title: "Admissions",
-    breadcrumbs: [
-      { label: "Home", href: "/" },
-      { label: "Admissions", href: "/admissions", isActive: true }
-    ]
-  },
-  "/faculty": {
-    title: "Faculty",
-    breadcrumbs: [
-      { label: "Home", href: "/" },
-      { label: "Faculty", href: "/faculty", isActive: true }
-    ]
-  },
+//   "/admissions": {
+//     title: "Admissions",
+//     breadcrumbs: [
+//       { label: "Home", href: "/" },
+//       { label: "Admissions", href: "/admissions", isActive: true }
+//     ]
+//   },
+//   "/faculty": {
+//     title: "Faculty",
+//     breadcrumbs: [
+//       { label: "Home", href: "/" },
+//       { label: "Faculty", href: "/faculty", isActive: true }
+//     ]
+//   },
   "/faculty/areas": {
     title: "Faculty Areas",
     breadcrumbs: [
@@ -212,13 +212,13 @@ const routeConfig = {
       { label: "Alumni", href: "/alumni", isActive: true }
     ]
   },
-  "/research": {
-    title: "Research",
-    breadcrumbs: [
-      { label: "Home", href: "/" },
-      { label: "Research", href: "/research", isActive: true }
-    ]
-  },
+//   "/research": {
+//     title: "Research",
+//     breadcrumbs: [
+//       { label: "Home", href: "/" },
+//       { label: "Research", href: "/research", isActive: true }
+//     ]
+//   },
   "/international-relations": {
     title: "International Relations",
     breadcrumbs: [

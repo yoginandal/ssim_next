@@ -12,6 +12,7 @@ import LatestBlogsAndEvents from "@/pages/Home/LatestBlogs&Events";
 import AlumniSection from "@/pages/Home/AlumniSection";
 import PlacementIndustry from "@/pages/Home/Placement&Industry";
 import Footer from "@/pages/Footer/Footer";
+import HeroSection from "@/components/HeroSection";
 
 const sectionVariants = {
   hidden: { scale: 0.8, opacity: 0 },
@@ -78,7 +79,7 @@ export default function HomePage() {
 
   return (
     <>
-      <HeroSlider />
+      <HeroSection />
       <SectionWrapper>
         <AboutSection />
       </SectionWrapper>
