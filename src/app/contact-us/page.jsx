@@ -250,28 +250,46 @@ const ContactUs = () => {
 
     if (isValid) {
       try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        console.log("Form data:", formData);
-        setSubmitSuccess(true);
-
-        // Reset form
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          subject: "",
-          message: "",
+        // Send form data to API
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
         });
-        setErrors({});
-        setTouched({});
 
-        // Hide success message after 5 seconds
-        setTimeout(() => setSubmitSuccess(false), 5000);
+        const result = await response.json();
+
+        if (response.ok) {
+          // Success
+          console.log('Form submitted successfully:', result);
+          setSubmitSuccess(true);
+
+          // Reset form
+          setFormData({
+            firstName: "",
+            lastName: "",
+            email: "",
+            phone: "",
+            subject: "",
+            message: "",
+          });
+          setErrors({});
+          setTouched({});
+
+          // Hide success message after 5 seconds
+          setTimeout(() => setSubmitSuccess(false), 5000);
+        } else {
+          // API error
+          console.error('API Error:', result.error);
+          // You can add error handling here if needed
+          throw new Error(result.error || 'Failed to send message');
+        }
       } catch (error) {
         console.error("Submission failed:", error);
+        // You can add error handling here if needed
+        // For example, show an error message to the user
       } finally {
         setIsSubmitting(false);
       }
