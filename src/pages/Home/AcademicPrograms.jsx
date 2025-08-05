@@ -7,6 +7,7 @@ import WordPullUp from "@/components/ui/word-pull-up";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function AcademicPrograms() {
   const router = useRouter();
@@ -250,11 +251,13 @@ export default function AcademicPrograms() {
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-              <img
+              <Image
                 className="w-full h-full object-cover"
+                alt="Academic Programs"
                 src={`https://img.youtube.com/vi/${getVideoId(
                   features[activeVideo].video
                 )}/maxresdefault.jpg`}
+                fill
               />
               <div
                 className="absolute cursor-pointer inset-0 w-full h-full flex lg:hidden items-center justify-center"
@@ -314,11 +317,13 @@ export default function AcademicPrograms() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <img
+          <Image
             className="w-full h-full object-cover"
+            alt="Academic Programs"
             src={`https://img.youtube.com/vi/${getVideoId(
               features[activeVideo].video
             )}/maxresdefault.jpg`}
+            fill
           />
           <div
             className="absolute cursor-pointer inset-0 w-full h-full flex sm:hidden items-center justify-center"
