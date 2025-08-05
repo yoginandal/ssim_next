@@ -13,8 +13,6 @@ const HeroSection = ({
       <Image
         src={desktopImageSrc}
         alt={altText}
-        width={1920}
-        height={1080}
         fill
         priority
         className="object-cover object-center hidden md:block"
@@ -25,8 +23,6 @@ const HeroSection = ({
       <Image
         src={mobileImageSrc}
         alt={altText}
-        width={600}
-        height={600}
         fill
         priority
         className="object-cover object-center block md:hidden"
