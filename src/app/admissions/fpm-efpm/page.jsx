@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 // import { ScrollArea } from "@/components/ui/scroll-area";
 import Scholarships from "@/app/admissions/Scholarships";
+import AdmissionProcess from "@/app/admissions/AdmissionProcess";
 // import SEO from "@/components/Seo";
 
 import {
@@ -37,6 +38,7 @@ import {
   ClipboardList,
   Award,
   Globe,
+  UserCheck,
 } from "lucide-react";
 import {
   Table,
@@ -59,6 +61,7 @@ const navigationSections = [
   { id: "fees", label: "Fee Structure", icon: CreditCard },
   { id: "dates", label: "Important Dates", icon: Calendar },
   // { id: "brochure", label: "Brochure", icon: BookOpen },
+  { id: "admission-process", label: "Admission Process", icon: UserCheck },
   { id: "apply", label: "Apply Now", icon: School },
   { id: "scholarships", label: "Scholarships", icon: Trophy },
 ];
@@ -623,6 +626,8 @@ export default function FPM() {
         return <Apply />;
       case "scholarships":
         return <Scholarships />;
+      case "admission-process":
+        return <AdmissionProcess />;
       default:
         return null;
     }

@@ -40,6 +40,7 @@ import {
   Globe,
   BriefcaseBusiness,
   ClipboardList,
+  UserCheck,
 } from "lucide-react";
 import {
   Table,
@@ -52,6 +53,7 @@ import {
 import Scholarships from "@/app/admissions/Scholarships";
 import SelectionProcess from "@/app/admissions/SelectionProcess";
 import AdmissionParameters from "@/app/admissions/AdmissionParameters";
+import AdmissionProcess from "@/app/admissions/AdmissionProcess";
 const PGDMBIFSBanner = "/admissions/admissions.webp";
 // Navigation Data
 const navigationSections = [
@@ -62,6 +64,7 @@ const navigationSections = [
   { id: "fees", label: "Fee Structure", icon: CreditCard },
   { id: "dates", label: "Important Dates", icon: Calendar },
   // { id: "brochure", label: "Brochure", icon: BookOpen },
+  { id: "admission-process", label: "Admission Process", icon: UserCheck }, 
   { id: "apply", label: "Apply Now", icon: School },
   { id: "scholarships", label: "Scholarships", icon: Trophy },
 ];
@@ -790,6 +793,8 @@ const PGDMBIFS = () => {
         return <Apply />;
       case "scholarships":
         return <Scholarships />;
+      case "admission-process":
+        return <AdmissionProcess />;
       default:
         return null;
     }
