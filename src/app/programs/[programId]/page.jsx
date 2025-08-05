@@ -2479,6 +2479,24 @@ const ProgramsOverview = ({ params }) => {
   };
 
   const handleSectionChange = (sectionId) => {
+    // If the section is "eligibility", redirect to the appropriate admission page
+    if (sectionId === "eligibility") {
+      // Map program IDs to their admission routes
+      const admissionRoutes = {
+        "fpm/efpm": "/admissions/fpm-efpm",
+        "pgdm-ba": "/admissions/pgdm-ba", 
+        "pgdm-bifs": "/admissions/pgdm-bifs",
+        "pgdm-triple-specialisation": "/admissions/pgdm-triple-specialisation"
+      };
+      
+      const admissionRoute = admissionRoutes[activeProgram];
+      if (admissionRoute) {
+        router.push(admissionRoute);
+        return;
+      }
+    }
+    
+    // For other sections, proceed with normal behavior
     setActiveSection(sectionId);
     const newParams = new URLSearchParams(searchParams);
     newParams.set("section", sectionId);
