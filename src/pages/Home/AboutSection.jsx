@@ -20,6 +20,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useInView } from "react-intersection-observer";
+import Image from "next/image";
 
 const AboutSSIM = "/about_ssim/About.png";
 
@@ -218,14 +219,14 @@ export default function AboutSection() {
             >
               <Card className="overflow-hidden border-0 shadow-2xl rounded-none">
                 <CardContent className="p-0">
-                  <div className="relative">
-                    <img
+                  <div className="relative aspect-square">
+                    <Image
                       alt="SSIM Campus Life"
-                      className="object-cover w-full h-full transform transition-transform hover:scale-105 duration-700"
                       src={AboutSSIM}
-                      style={{
-                        objectFit: "cover",
-                      }}
+                      fill
+                      priority
+                      className="object-cover w-full h-full transform transition-transform hover:scale-105 duration-700"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent" /> */}
                     <Badge className="absolute top-4 left-4 bg-red-600 animate-pulse text-white  backdrop-blur">
@@ -259,14 +260,14 @@ export default function AboutSection() {
               </div>
               <Card className="overflow-hidden block lg:hidden !mt-16 border-0 shadow-2xl rounded-none">
                 <CardContent className="p-0">
-                  <div className="relative">
-                    <img
-                      alt="SSIM Campus Life"
-                      className="object-cover w-full h-full transform transition-transform hover:scale-105 duration-700"
+                  <div className="relative aspect-square">
+                    <Image
                       src={AboutSSIM}
-                      style={{
-                        objectFit: "cover",
-                      }}
+                      alt="SSIM Campus Life"
+                      fill
+                      priority
+                      className="object-cover w-full h-full transform transition-transform hover:scale-105 duration-700"
+                      sizes="100vw"
                     />
                     {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent" /> */}
                     <Badge className="absolute top-4 left-4 bg-red-600 animate-pulse text-white  backdrop-blur">
