@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import WordPullUp from "@/components/ui/word-pull-up";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import Image from "next/image";
 
 const slides = [
   {
@@ -137,9 +138,10 @@ function SsimStories() {
                     onMouseLeave={() => setHoveredIndex(null)}
                   >
                     <div className="aspect-video overflow-hidden rounded-lg shadow-xl">
-                      <img
-                        src={slide.thumbnail}
+                      <Image
                         alt={slide.alt}
+                        src={slide.thumbnail}
+                        fill
                         className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
                       />
                     </div>
