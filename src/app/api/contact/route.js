@@ -82,23 +82,6 @@ export async function POST(request) {
               <p style="margin: 0; line-height: 1.6; color: #374151; white-space: pre-wrap;">${message}</p>
             </div>
           </div>
-          
-          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
-            <p style="margin: 0;">
-              <strong>Submission Details:</strong><br>
-              Date: ${new Date().toLocaleString('en-IN', { 
-                timeZone: 'Asia/Kolkata',
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-              })}<br>
-              IP Address: ${request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'Unknown'}<br>
-              User Agent: ${request.headers.get('user-agent') || 'Unknown'}
-            </p>
-          </div>
         </div>
       </div>
     `;
