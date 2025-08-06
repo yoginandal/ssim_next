@@ -5,8 +5,8 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: "d4nish003@gmail.com", // Your Gmail address
-    pass: "gwvs kibc joqh bpgu", // Your Gmail app password
+    user: "info@ssim.ac.in", // Your Gmail address
+    pass: "xmqh lotl fiqt pobj", // Your Gmail app password
   },
 });
 
@@ -106,7 +106,7 @@ export async function POST(request) {
     // Email configuration
     const mailOptions = {
       from: process.env.EMAIL_USER, // Your Gmail address
-      to: 'd4nish003@gmail.com', // Your target email
+      to: 'info@ssim.ac.in', // Your target email
       subject: `Contact Form Submission: ${subject} - SSIM Website`,
       html: emailContent,
       replyTo: email, // Set reply-to to the sender's email

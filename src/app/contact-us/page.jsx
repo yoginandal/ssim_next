@@ -199,14 +199,28 @@ const ContactUs = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    
+    // Special handling for phone number to limit to 10 digits
+    if (name === "phone") {
+      // Remove any non-digit characters
+      const digitsOnly = value.replace(/\D/g, "");
+      // Limit to 10 digits
+      const limitedValue = digitsOnly.slice(0, 10);
+      
+      setFormData((prev) => ({
+        ...prev,
+        [name]: limitedValue,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
 
     // Real-time validation
     if (touched[name]) {
-      const error = validateField(name, value);
+      const error = validateField(name, name === "phone" ? value.replace(/\D/g, "").slice(0, 10) : value);
       setErrors((prev) => ({
         ...prev,
         [name]: error,
