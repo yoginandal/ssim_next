@@ -26,7 +26,6 @@ jobs:
         with:
           node-version: "22.x"
           cache: "pnpm"
-          cache-dependency-path: "pnpm-lock.yaml"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -34,85 +33,29 @@ jobs:
       - name: Build Next.js app
         run: pnpm run build
 
-      - name: Create optimized production dependencies
+      - name: Create package-lock.json for Azure
         run: |
-          echo "Creating optimized production installation..."
-          # Remove dev dependencies and use npm for Azure compatibility
-          rm -rf node_modules
-
-          # Generate package-lock.json and install with npm for Azure compatibility
+          # Generate package-lock.json for Azure's npm install
           npm install --package-lock-only
-          npm ci --omit=dev --ignore-scripts
+          echo "Generated package-lock.json for Azure compatibility"
 
-          # SAFER optimization - avoid deleting essential Next.js files
-          echo "Optimizing node_modules for deployment..."
-
-          # Only remove documentation and metadata files (safe deletions)
-          find node_modules -name "*.md" -type f -delete 2>/dev/null || true
-          find node_modules -name "*.txt" -type f -delete 2>/dev/null || true
-          find node_modules -name "LICENSE*" -type f -delete 2>/dev/null || true
-          find node_modules -name "CHANGELOG*" -type f -delete 2>/dev/null || true
-          find node_modules -name "HISTORY*" -type f -delete 2>/dev/null || true
-          find node_modules -name "AUTHORS*" -type f -delete 2>/dev/null || true
-
-          # Remove development and testing files (safe deletions)
-          find node_modules -name "*.map" -type f -delete 2>/dev/null || true
-          find node_modules -name ".DS_Store" -type f -delete 2>/dev/null || true
-          find node_modules -name "Thumbs.db" -type f -delete 2>/dev/null || true
-
-          # Only remove obvious test directories (be more selective)
-          find node_modules -name "__tests__" -type d -exec rm -rf {} + 2>/dev/null || true
-          find node_modules -name "test" -type d -path "*/node_modules/*/test" -exec rm -rf {} + 2>/dev/null || true
-          find node_modules -name "tests" -type d -path "*/node_modules/*/tests" -exec rm -rf {} + 2>/dev/null || true
-
-          # REMOVED aggressive deletions that were breaking Next.js:
-          # - No more deleting "src" directories (Next.js needs these)
-          # - No more deleting "lib" directories (contains compiled code)
-          # - No more deleting "*.d.ts" files (TypeScript definitions needed at runtime)
-
-          echo "Node_modules optimization completed (safer approach)"
-          echo "Optimized size: $(du -sh node_modules | cut -f1)"
-
-      - name: Prepare optimized deployment package
+      - name: Prepare lightweight deployment package
         run: |
-          echo "Creating optimized deployment package..."
           rm -f deploy.zip
-
-          # Keep node_modules/.bin/* for executables like 'next'
-          # Use maximum compression and exclude unnecessary files
-          zip -9 -r deploy.zip \
-            .next \
-            public \
-            package.json \
-            node_modules \
-            next.config.js \
-            -x "node_modules/.cache/*" \
-            -x "node_modules/*/node_modules/*" \
-            -x "*.log" \
-            -x "npm-debug.log*" \
-            -x "yarn-debug.log*" \
-            -x "yarn-error.log*" \
-            2>/dev/null || true
-
-          # Display package information
-          PACKAGE_SIZE=$(du -h deploy.zip | cut -f1)
-          echo "Deployment package created: $PACKAGE_SIZE"
-
-          # Verify essential files are included
-          echo "Verifying package contents..."
-          unzip -l deploy.zip | head -20
+          # Include only essential files + package-lock.json for Azure
+          zip -r deploy.zip .next public package.json package-lock.json next.config.js 2>/dev/null || true
+          echo "Deployment package size: $(du -h deploy.zip | cut -f1)"
 
       - name: Upload deployment package
         uses: actions/upload-artifact@v4
         with:
           name: deploy-package
           path: deploy.zip
-          retention-days: 1
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    timeout-minutes: 10 # Optimized timeout
+    timeout-minutes: 15 # Increased timeout
 
     steps:
       - name: Download deployment package
