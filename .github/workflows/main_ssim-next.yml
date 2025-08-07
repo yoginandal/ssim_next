@@ -37,9 +37,12 @@ jobs:
       - name: Create optimized production dependencies
         run: |
           echo "Creating optimized production installation..."
-          # Remove dev dependencies and create clean production install
+          # Remove dev dependencies and use npm for Azure compatibility
           rm -rf node_modules
-          pnpm install --prod --frozen-lockfile --ignore-scripts
+
+          # Generate package-lock.json and install with npm for Azure compatibility
+          npm install --package-lock-only
+          npm ci --omit=dev --ignore-scripts
 
           # Aggressively optimize node_modules for deployment
           echo "Optimizing node_modules for deployment..."
@@ -83,7 +86,7 @@ jobs:
           echo "Creating optimized deployment package..."
           rm -f deploy.zip
 
-          # CRITICAL FIX: Keep node_modules/.bin/* for executables like 'next'
+          # Keep node_modules/.bin/* for executables like 'next'
           # Use maximum compression and exclude unnecessary files
           zip -9 -r deploy.zip \
             .next \
