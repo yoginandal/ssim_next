@@ -26,45 +26,61 @@ jobs:
         with:
           node-version: "22.x"
           cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
 
-      - name: Install dependencies with pnpm
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Approve build scripts (handle sharp, unrs-resolver)
-        run: |
-          echo "Approving build scripts for CI environment"
-          # This ensures build scripts run without prompts
-          pnpm config set auto-install-peers true
-          pnpm config set enable-pre-post-scripts true
 
       - name: Build Next.js app
         run: pnpm run build
 
       - name: Create production node_modules
         run: |
-          # Create a clean production install
+          echo "Creating clean production installation..."
           rm -rf node_modules
-          pnpm install --prod --frozen-lockfile
+          pnpm install --prod --frozen-lockfile --ignore-scripts
+          echo "Production dependencies installed successfully"
+
+      - name: Optimize node_modules for deployment
+        run: |
+          echo "Removing unnecessary files to reduce package size..."
+          # Remove common unnecessary files to reduce deployment size
+          find node_modules -name "*.md" -type f -delete
+          find node_modules -name "*.txt" -type f -delete  
+          find node_modules -name "LICENSE*" -type f -delete
+          find node_modules -name "CHANGELOG*" -type f -delete
+          find node_modules -name ".DS_Store" -type f -delete
+          find node_modules -name "*.map" -type f -delete
+          # Remove test and example directories
+          find node_modules -name "__tests__" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "test" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "tests" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "example" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "examples" -type d -exec rm -rf {} + 2>/dev/null || true
+          echo "Node_modules optimization completed"
 
       - name: Prepare deployment package
         run: |
+          echo "Creating deployment package..."
           rm -f deploy.zip
-          # Include node_modules to ensure all dependencies are available on Azure
-          zip -r deploy.zip .next public package.json next.config.js node_modules 2>/dev/null || true
+          # Include node_modules to ensure all dependencies work on Azure
+          zip -r deploy.zip .next public package.json node_modules next.config.js -x "node_modules/.cache/*" 2>/dev/null || true
+          echo "Deployment package created: $(du -h deploy.zip | cut -f1)"
 
-      - name: Upload deployment package artifact
+      - name: Upload deployment package
         uses: actions/upload-artifact@v4
         with:
           name: deploy-package
           path: deploy.zip
+          retention-days: 1 # Clean up artifacts quickly to save space
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment: production # Optional: adds protection rules
+    timeout-minutes: 10 # Prevent hanging deployments
 
     steps:
-      - name: Download deployment package artifact
+      - name: Download deployment package
         uses: actions/download-artifact@v4
         with:
           name: deploy-package
