@@ -28,31 +28,84 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "pnpm-lock.yaml"
 
-      - name: Install dependencies (for validation)
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Next.js app (for validation)
+      - name: Build Next.js app
         run: pnpm run build
 
-      - name: Generate package-lock.json for Azure
+      - name: Create optimized production dependencies
         run: |
-          echo "Generating package-lock.json for Azure npm compatibility..."
-          npm install --package-lock-only
-          echo "Package-lock.json generated successfully"
+          echo "Creating optimized production installation..."
+          # Remove dev dependencies and create clean production install
+          rm -rf node_modules
+          pnpm install --prod --frozen-lockfile --ignore-scripts
 
-      - name: Prepare lightweight deployment package
+          # Aggressively optimize node_modules for deployment
+          echo "Optimizing node_modules for deployment..."
+
+          # Remove documentation and metadata files
+          find node_modules -name "*.md" -type f -delete 2>/dev/null || true
+          find node_modules -name "*.txt" -type f -delete 2>/dev/null || true
+          find node_modules -name "LICENSE*" -type f -delete 2>/dev/null || true
+          find node_modules -name "CHANGELOG*" -type f -delete 2>/dev/null || true
+          find node_modules -name "HISTORY*" -type f -delete 2>/dev/null || true
+          find node_modules -name "AUTHORS*" -type f -delete 2>/dev/null || true
+
+          # Remove development and testing files
+          find node_modules -name "*.map" -type f -delete 2>/dev/null || true
+          find node_modules -name ".DS_Store" -type f -delete 2>/dev/null || true
+          find node_modules -name "Thumbs.db" -type f -delete 2>/dev/null || true
+
+          # Remove test, example, and documentation directories
+          find node_modules -name "__tests__" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "test" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "tests" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "testing" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "example" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "examples" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "demo" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "docs" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "documentation" -type d -exec rm -rf {} + 2>/dev/null || true
+
+          # Remove TypeScript declaration files (not needed at runtime)
+          find node_modules -name "*.d.ts" -type f -delete 2>/dev/null || true
+
+          # Remove source files (keep only built files)
+          find node_modules -name "src" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "lib" -type d -name "*.ts" -exec rm -rf {} + 2>/dev/null || true
+
+          echo "Node_modules optimization completed"
+          echo "Optimized size: $(du -sh node_modules | cut -f1)"
+
+      - name: Prepare optimized deployment package
         run: |
-          echo "Creating lightweight deployment package for Azure building..."
+          echo "Creating optimized deployment package..."
           rm -f deploy.zip
-          # Include source code and configs for Azure to build
-          zip -r deploy.zip . \
-            -x "node_modules/*" \
-            -x ".git/*" \
-            -x ".github/*" \
-            -x "*.md" \
-            -x ".next/*" \
+
+          # Use maximum compression and exclude unnecessary files
+          zip -9 -r deploy.zip \
+            .next \
+            public \
+            package.json \
+            node_modules \
+            next.config.js \
+            -x "node_modules/.cache/*" \
+            -x "node_modules/.bin/*" \
+            -x "node_modules/*/node_modules/*" \
+            -x "*.log" \
+            -x "npm-debug.log*" \
+            -x "yarn-debug.log*" \
+            -x "yarn-error.log*" \
             2>/dev/null || true
-          echo "Deployment package created: $(du -h deploy.zip | cut -f1)"
+
+          # Display package information
+          PACKAGE_SIZE=$(du -h deploy.zip | cut -f1)
+          echo "Deployment package created: $PACKAGE_SIZE"
+
+          # Verify essential files are included
+          echo "Verifying package contents..."
+          unzip -l deploy.zip | head -20
 
       - name: Upload deployment package
         uses: actions/upload-artifact@v4
@@ -64,7 +117,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    timeout-minutes: 12 # Reduced timeout since Azure builds are usually faster
+    timeout-minutes: 10 # Optimized timeout
 
     steps:
       - name: Download deployment package
