@@ -26,6 +26,7 @@ jobs:
         with:
           node-version: "22.x"
           cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -33,29 +34,49 @@ jobs:
       - name: Build Next.js app
         run: pnpm run build
 
-      - name: Create package-lock.json for Azure
+      - name: Create production dependencies (ZERO optimization)
         run: |
-          # Generate package-lock.json for Azure's npm install
-          npm install --package-lock-only
-          echo "Generated package-lock.json for Azure compatibility"
+          echo "Creating production installation with ZERO file modifications..."
+          rm -rf node_modules
 
-      - name: Prepare lightweight deployment package
+          # Use npm for Azure compatibility - DO NOT TOUCH ANYTHING ELSE
+          npm install --package-lock-only
+          npm ci --omit=dev --ignore-scripts
+
+          # DO NOT DELETE, MOVE, OR MODIFY ANY FILES
+          # Leave everything exactly as npm installed it
+
+          echo "Production installation completed - NO files modified"
+          echo "Package size: $(du -sh node_modules | cut -f1)"
+
+      - name: Prepare deployment package
         run: |
+          echo "Creating deployment package..."
           rm -f deploy.zip
-          # Include only essential files + package-lock.json for Azure
-          zip -r deploy.zip .next public package.json package-lock.json next.config.js 2>/dev/null || true
-          echo "Deployment package size: $(du -h deploy.zip | cut -f1)"
+
+          # Package everything with zero exclusions (except obvious cache)
+          zip -9 -r deploy.zip \
+            .next \
+            public \
+            package.json \
+            node_modules \
+            next.config.js \
+            2>/dev/null || true
+
+          PACKAGE_SIZE=$(du -h deploy.zip | cut -f1)
+          echo "Deployment package created: $PACKAGE_SIZE"
 
       - name: Upload deployment package
         uses: actions/upload-artifact@v4
         with:
           name: deploy-package
           path: deploy.zip
+          retention-days: 1
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    timeout-minutes: 15 # Increased timeout
+    timeout-minutes: 15 # Increased for larger package
 
     steps:
       - name: Download deployment package
