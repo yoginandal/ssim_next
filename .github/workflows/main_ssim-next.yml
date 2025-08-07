@@ -26,6 +26,7 @@ jobs:
         with:
           node-version: "22.x"
           cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -33,29 +34,50 @@ jobs:
       - name: Build Next.js app
         run: pnpm run build
 
-      - name: Create package-lock.json for Azure
+      - name: Create production node_modules
         run: |
-          # Generate package-lock.json for Azure's npm install
-          npm install --package-lock-only
-          echo "Generated package-lock.json for Azure compatibility"
+          echo "Creating clean production installation..."
+          rm -rf node_modules
+          pnpm install --prod --frozen-lockfile --ignore-scripts
+          echo "Production dependencies installed successfully"
 
-      - name: Prepare lightweight deployment package
+      - name: Optimize node_modules for deployment
         run: |
+          echo "Removing unnecessary files to reduce package size..."
+          # Remove common unnecessary files to reduce deployment size
+          find node_modules -name "*.md" -type f -delete 2>/dev/null || true
+          find node_modules -name "*.txt" -type f -delete 2>/dev/null || true
+          find node_modules -name "LICENSE*" -type f -delete 2>/dev/null || true
+          find node_modules -name "CHANGELOG*" -type f -delete 2>/dev/null || true
+          find node_modules -name ".DS_Store" -type f -delete 2>/dev/null || true
+          find node_modules -name "*.map" -type f -delete 2>/dev/null || true
+          # Remove test and example directories
+          find node_modules -name "__tests__" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "test" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "tests" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "example" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "examples" -type d -exec rm -rf {} + 2>/dev/null || true
+          echo "Node_modules optimization completed"
+
+      - name: Prepare deployment package with dependencies
+        run: |
+          echo "Creating deployment package with dependencies..."
           rm -f deploy.zip
-          # Include only essential files + package-lock.json for Azure
-          zip -r deploy.zip .next public package.json package-lock.json next.config.js 2>/dev/null || true
-          echo "Deployment package size: $(du -h deploy.zip | cut -f1)"
+          # Include node_modules to ensure all dependencies are available on Azure
+          zip -r deploy.zip .next public package.json node_modules next.config.js -x "node_modules/.cache/*" 2>/dev/null || true
+          echo "Deployment package created: $(du -h deploy.zip | cut -f1)"
 
       - name: Upload deployment package
         uses: actions/upload-artifact@v4
         with:
           name: deploy-package
           path: deploy.zip
+          retention-days: 1 # Clean up artifacts quickly to save space
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    timeout-minutes: 15 # Increased timeout
+    timeout-minutes: 15 # Increased timeout for large package deployment
 
     steps:
       - name: Download deployment package
