@@ -13,9 +13,11 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: 10
 
@@ -28,16 +30,27 @@ jobs:
       - name: Install dependencies with pnpm
         run: pnpm install --frozen-lockfile
 
+      - name: Approve build scripts (handle sharp, unrs-resolver)
+        run: |
+          echo "Approving build scripts for CI environment"
+          # This ensures build scripts run without prompts
+          pnpm config set auto-install-peers true
+          pnpm config set enable-pre-post-scripts true
+
       - name: Build Next.js app
         run: pnpm run build
 
-      - name: Prune dev dependencies
-        run: pnpm prune --prod
+      - name: Create production node_modules
+        run: |
+          # Create a clean production install
+          rm -rf node_modules
+          pnpm install --prod --frozen-lockfile
 
       - name: Prepare deployment package
         run: |
           rm -f deploy.zip
-          zip -r deploy.zip .next public package.json next.config.js 2>/dev/null || true
+          # Include node_modules to ensure all dependencies are available on Azure
+          zip -r deploy.zip .next public package.json next.config.js node_modules 2>/dev/null || true
 
       - name: Upload deployment package artifact
         uses: actions/upload-artifact@v4
@@ -48,6 +61,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    environment: production # Optional: adds protection rules
 
     steps:
       - name: Download deployment package artifact

@@ -6,7 +6,6 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "postinstall": "pnpm prune --prod",
     "lint": "next lint"
   },
   "dependencies": {
