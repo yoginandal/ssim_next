@@ -44,10 +44,10 @@ jobs:
           npm install --package-lock-only
           npm ci --omit=dev --ignore-scripts
 
-          # Aggressively optimize node_modules for deployment
+          # SAFER optimization - avoid deleting essential Next.js files
           echo "Optimizing node_modules for deployment..."
 
-          # Remove documentation and metadata files
+          # Only remove documentation and metadata files (safe deletions)
           find node_modules -name "*.md" -type f -delete 2>/dev/null || true
           find node_modules -name "*.txt" -type f -delete 2>/dev/null || true
           find node_modules -name "LICENSE*" -type f -delete 2>/dev/null || true
@@ -55,30 +55,22 @@ jobs:
           find node_modules -name "HISTORY*" -type f -delete 2>/dev/null || true
           find node_modules -name "AUTHORS*" -type f -delete 2>/dev/null || true
 
-          # Remove development and testing files
+          # Remove development and testing files (safe deletions)
           find node_modules -name "*.map" -type f -delete 2>/dev/null || true
           find node_modules -name ".DS_Store" -type f -delete 2>/dev/null || true
           find node_modules -name "Thumbs.db" -type f -delete 2>/dev/null || true
 
-          # Remove test, example, and documentation directories
+          # Only remove obvious test directories (be more selective)
           find node_modules -name "__tests__" -type d -exec rm -rf {} + 2>/dev/null || true
-          find node_modules -name "test" -type d -exec rm -rf {} + 2>/dev/null || true
-          find node_modules -name "tests" -type d -exec rm -rf {} + 2>/dev/null || true
-          find node_modules -name "testing" -type d -exec rm -rf {} + 2>/dev/null || true
-          find node_modules -name "example" -type d -exec rm -rf {} + 2>/dev/null || true
-          find node_modules -name "examples" -type d -exec rm -rf {} + 2>/dev/null || true
-          find node_modules -name "demo" -type d -exec rm -rf {} + 2>/dev/null || true
-          find node_modules -name "docs" -type d -exec rm -rf {} + 2>/dev/null || true
-          find node_modules -name "documentation" -type d -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "test" -type d -path "*/node_modules/*/test" -exec rm -rf {} + 2>/dev/null || true
+          find node_modules -name "tests" -type d -path "*/node_modules/*/tests" -exec rm -rf {} + 2>/dev/null || true
 
-          # Remove TypeScript declaration files (not needed at runtime)
-          find node_modules -name "*.d.ts" -type f -delete 2>/dev/null || true
+          # REMOVED aggressive deletions that were breaking Next.js:
+          # - No more deleting "src" directories (Next.js needs these)
+          # - No more deleting "lib" directories (contains compiled code)
+          # - No more deleting "*.d.ts" files (TypeScript definitions needed at runtime)
 
-          # Remove source files (keep only built files)
-          find node_modules -name "src" -type d -exec rm -rf {} + 2>/dev/null || true
-          find node_modules -name "lib" -type d -name "*.ts" -exec rm -rf {} + 2>/dev/null || true
-
-          echo "Node_modules optimization completed"
+          echo "Node_modules optimization completed (safer approach)"
           echo "Optimized size: $(du -sh node_modules | cut -f1)"
 
       - name: Prepare optimized deployment package
