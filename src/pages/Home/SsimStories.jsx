@@ -141,6 +141,7 @@ function SsimStories() {
                       <Image
                         alt={slide.alt}
                         src={slide.thumbnail}
+                        unoptimized={true}
                         fill
                         className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
                       />

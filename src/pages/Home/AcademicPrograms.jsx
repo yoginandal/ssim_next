@@ -254,6 +254,7 @@ export default function AcademicPrograms() {
               <Image
                 className="w-full h-full object-cover"
                 alt="Academic Programs"
+                unoptimized={true}
                 src={`https://img.youtube.com/vi/${getVideoId(
                   features[activeVideo].video
                 )}/maxresdefault.jpg`}
@@ -320,6 +321,7 @@ export default function AcademicPrograms() {
           <Image
             className="w-full h-full object-cover"
             alt="Academic Programs"
+            unoptimized={true}
             src={`https://img.youtube.com/vi/${getVideoId(
               features[activeVideo].video
             )}/maxresdefault.jpg`}
