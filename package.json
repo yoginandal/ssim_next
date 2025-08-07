@@ -48,5 +48,11 @@
   },
   "engines": {
     "node": ">=18 <=22"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }
