@@ -83,6 +83,7 @@ jobs:
           echo "Creating optimized deployment package..."
           rm -f deploy.zip
 
+          # CRITICAL FIX: Keep node_modules/.bin/* for executables like 'next'
           # Use maximum compression and exclude unnecessary files
           zip -9 -r deploy.zip \
             .next \
@@ -91,7 +92,6 @@ jobs:
             node_modules \
             next.config.js \
             -x "node_modules/.cache/*" \
-            -x "node_modules/.bin/*" \
             -x "node_modules/*/node_modules/*" \
             -x "*.log" \
             -x "npm-debug.log*" \
