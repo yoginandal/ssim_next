@@ -19,6 +19,20 @@ export const metadata = {
   title: "SSIM - Siva Sivani Institute of Management",
   description:
     "Siva Sivani Institute of Management - Excellence in Management Education",
+  icons: {
+    icon: [
+      {
+        url: "/ssim-favicon.png",
+        type: "image/png",
+      },
+      {
+        url: "/ssim-favicon.png",
+        sizes: "any",
+      },
+    ],
+    apple: "/ssim-favicon.png",
+    shortcut: "/ssim-favicon.png",
+  },
 };
 
 export default function RootLayout({ children }) {

@@ -350,7 +350,7 @@ export default function Areas() {
         canonicalUrl="https://www.ssim.ac.in/faculty/areas"
       /> */}
       <section className="w-full py-16">
-        <div className="container px-4 md:px-6">
+        <div className="px-4 md:px-6 mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

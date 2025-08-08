@@ -26,7 +26,7 @@ export const metadata = {
     follow: true,
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.png",
   },
   manifest: "/manifest.json",
   viewport: {
