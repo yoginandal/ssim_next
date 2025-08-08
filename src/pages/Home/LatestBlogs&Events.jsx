@@ -27,7 +27,8 @@ export default function LatestBlogsAndEvents() {
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 h-[780px] xs:h-[720px] sm:max-h-[500px]">
           {latestPost && (
-            <a href={`/blog/${latestPost.slug}`}>
+            // <a href={`/blog/${latestPost.slug}`}>
+            <a>
               {" "}
               <FirstBlog post={latestPost} />{" "}
             </a>
@@ -35,7 +36,8 @@ export default function LatestBlogsAndEvents() {
           <div className="grid grid-cols-1 gap-5 relative overflow-hidden h-full">
             <AnimatedList>
               {eventPosts.map((post) => (
-                <a href={`/blog/${post.slug}`} key={post.id}>
+                // <a href={`/blog/${post.slug}`} key={post.id}>
+                <a key={post.id}>
                   <EventCard
                     key={post.id}
                     id={post.id}
@@ -55,7 +57,7 @@ export default function LatestBlogsAndEvents() {
           </div>
         </div>
 
-        <Link
+        {/* <Link
           href="/blog"
           className="flex justify-center mt-8"
           onClick={() => {
@@ -76,7 +78,7 @@ export default function LatestBlogsAndEvents() {
               <ArrowRight className="w-4 bg-mainBlue h-4 transition-transform group-hover:translate-x-1" />
             </div>
           </Button>
-        </Link>
+        </Link> */}
       </Container>
     </>
   );

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
+  // Remove output: "standalone" for Azure App Services
   images: {
     remotePatterns: [
       // Main YouTube thumbnails
